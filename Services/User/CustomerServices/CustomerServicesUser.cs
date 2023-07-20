@@ -48,7 +48,7 @@ namespace Restaurant_Reservation_Management_System_Api.Services.User.CustomerSer
 
             var newGetCustomerDtoUser = new GetCustomerDtoUser()
             {
-                CustomerId = newCustomer.CustomerId,
+               // CustomerId = newCustomer.CustomerId,
                 Name = newCustomer.Name ,
                 Email = newCustomer.Email,
                 Phone = newCustomer.Phone,

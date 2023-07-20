@@ -7,11 +7,15 @@ namespace Restaurant_Reservation_Management_System_Api.Services.User.Reservation
 {
     public interface IReservationServicesUser
     {
-        Task<ServiceResponse<GetReservationDtoUser>> PostReservation(CreateReservationDtoUser createReservationDtoUser);
+       // Task<ServiceResponse<GetReservationDtoUser>> PostReservation(CreateReservationDtoUser createReservationDtoUser);
 
         Task<ServiceResponse<string>> DeleteReservation(int id);
 
-        Task<ServiceResponse<List<GetTableDtoUser>>> GetAvailableTables(GetReservationDetailsForTableDtoUser getReservationDetailsForTableDtoUser);
+        // Task<ServiceResponse<List<GetTableDtoUser>>> GetAvailableTables(GetAvailableTablesDto getReservationDetailsForTableDtoUser);
+
+        Task<ServiceResponse<Reservation>> ReserveTable(CreateReservationDtoUser createReservationDtoUser);
+        Task<ServiceResponse<List<TableAvailability>>> GetAvailableTables(GetAvailableTablesDto getAvailableTablesDto);
     }
+
 
 }

@@ -284,16 +284,16 @@ namespace Restaurant_Reservation_Management_System_Api.Migrations
                         {
                             Id = "1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "da73a21d-04ba-41cf-8cdd-7133e5cf4471",
+                            ConcurrencyStamp = "91aa3e03-d8b2-4557-a2a3-c668e0e5aaef",
                             Email = "vignesh123@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             Name = "vignesh",
                             NormalizedEmail = "VIGNESH123@GMAIL.COM",
                             NormalizedUserName = "VIGNESH",
-                            PasswordHash = "AQAAAAIAAYagAAAAEH05P0dg5vjWhgMoBMshM4LFVSxFaSznYeDAQLKWpSXH1zvSjLrFpkikmbQTDnpwMg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH38M7zQak1lUnOKZ4iay4ZYgY5MrUAQBH2g+hjt7gZgQ2P4H8lGaMKxVCXktPSs2g==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "d531cd63-086d-4226-b26e-bbaf1241172a",
+                            SecurityStamp = "12df6bbe-e0c4-4b00-87f9-89a47b7a6841",
                             TwoFactorEnabled = false,
                             UserName = "vignesh"
                         });
@@ -301,11 +301,11 @@ namespace Restaurant_Reservation_Management_System_Api.Migrations
 
             modelBuilder.Entity("Restaurant_Reservation_Management_System_Api.Model.Customer", b =>
                 {
-                    b.Property<int>("CustomerId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CustomerId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -327,7 +327,7 @@ namespace Restaurant_Reservation_Management_System_Api.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("CustomerId");
+                    b.HasKey("Id");
 
                     b.ToTable("Customers");
                 });
@@ -465,10 +465,8 @@ namespace Restaurant_Reservation_Management_System_Api.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ApplicationUserId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("EndTime")
                         .HasColumnType("datetime2");
@@ -490,8 +488,6 @@ namespace Restaurant_Reservation_Management_System_Api.Migrations
                     b.HasIndex("AdminId");
 
                     b.HasIndex("ApplicationUserId");
-
-                    b.HasIndex("CustomerId");
 
                     b.HasIndex("TableId");
 
@@ -626,13 +622,9 @@ namespace Restaurant_Reservation_Management_System_Api.Migrations
                         .WithMany("Reservations")
                         .HasForeignKey("AdminId");
 
-                    b.HasOne("Restaurant_Reservation_Management_System_Api.Model.ApplicationUser", null)
+                    b.HasOne("Restaurant_Reservation_Management_System_Api.Model.ApplicationUser", "ApplicationUser")
                         .WithMany("Reservations")
-                        .HasForeignKey("ApplicationUserId");
-
-                    b.HasOne("Restaurant_Reservation_Management_System_Api.Model.Customer", "Customer")
-                        .WithMany("Reservations")
-                        .HasForeignKey("CustomerId")
+                        .HasForeignKey("ApplicationUserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -642,7 +634,7 @@ namespace Restaurant_Reservation_Management_System_Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
+                    b.Navigation("ApplicationUser");
 
                     b.Navigation("Table");
                 });
@@ -656,11 +648,6 @@ namespace Restaurant_Reservation_Management_System_Api.Migrations
                 {
                     b.Navigation("Orders");
 
-                    b.Navigation("Reservations");
-                });
-
-            modelBuilder.Entity("Restaurant_Reservation_Management_System_Api.Model.Customer", b =>
-                {
                     b.Navigation("Reservations");
                 });
 

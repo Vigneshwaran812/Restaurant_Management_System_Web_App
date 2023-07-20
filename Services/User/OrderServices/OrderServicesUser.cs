@@ -8,8 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-
-
+using System.Globalization;
 
 namespace Restaurant_Reservation_Management_System_Api.Services.User.OrderServices
 {
@@ -57,7 +56,7 @@ namespace Restaurant_Reservation_Management_System_Api.Services.User.OrderServic
                 {
                     ApplicationUserId = customerId ,
                     OrderDate = DateTime.Now,
-                    TableId = 1,
+                    TableId = 5,
 
                 };
                 _context.Orders.Add(order);
@@ -105,63 +104,7 @@ namespace Restaurant_Reservation_Management_System_Api.Services.User.OrderServic
 
         }
 
-        //public async Task<ServiceResponse<IEnumerable<GetAllOrderDto>>> OrderDetails(string customerIdClaim)
-        //{
-        //    var serviceResponse = new ServiceResponse<IEnumerable<GetAllOrderDto>>();
-
-        //    var orders = await _context.Orders.ToListAsync();
-
-        //    var customerId = customerIdClaim;
-
-        //    var customer = await _userManager.FindByIdAsync(customerId);
-
-
-
-
-        //    if (orders == null)
-        //    {
-        //        serviceResponse.Success = true;
-        //        serviceResponse.Message = "No Orders Found!";
-        //        return serviceResponse;
-
-        //    }
-
-        //    var getOrderDtoList = new List<GetAllOrderDto>();  
-
-        //    foreach( var order in orders)
-        //    {
-        //        var table = _context.Tables.FirstOrDefault(t => t.TableId == order.TableId);
-
-        //        // var foodItemIds = order.OrderItems.Select(oi => oi.FoodItemId);
-
-        //        var getOrderItemDtos = order.OrderItems.Select(oi => new GetOrderItemDto
-        //        {
-        //            FoodItemId = oi.FoodItemId,
-        //            ItemName = oi.FoodItem.ItemName, // Access the FoodItem name directly from the OrderItem's FoodItem property
-        //            Quantity = oi.Quantity,
-        //            // Add other properties as needed...
-        //        }).ToList();
-        //        var getOrderDto = new GetAllOrderDto()
-        //        {
-        //            OrderId = order.OrderId,
-        //            CustomerId = customerId,
-        //            CustomerName = customer?.Name,
-        //            TableId = order.TableId,
-        //            TableNumber = table?.TableNumber,
-        //            OrderDate = order.OrderDate,
-        //            OrderItems = getOrderItemDtos,
-
-        //        };
-        //        getOrderDtoList.Add(getOrderDto);   
-
-        //    }
-        //    serviceResponse.Data = getOrderDtoList;
-        //    serviceResponse.Message = "Fetched All Placed Order Details";
-        //    return serviceResponse;
-
-
-        //}
-
+       
 
         public async Task<ServiceResponse<IEnumerable<GetAllOrderDto>>> OrderDetails(string customerIdClaim)
         {
@@ -215,9 +158,163 @@ namespace Restaurant_Reservation_Management_System_Api.Services.User.OrderServic
         }
 
 
+        public async Task<ServiceResponse<int>> GetTotalOrderCount()
+        {
+            var serviceResponse = new ServiceResponse<int>();
+
+            // Get the total count of orders from the database
+            var totalCount = await _context.Orders.CountAsync();
+
+            // Set the total order count in the Data property of the ServiceResponse
+            serviceResponse.Data = totalCount;
+
+            return serviceResponse;
+        }
+
+
+
+
+       
+
+        public async Task<ServiceResponse<(List<string> Dates, List<int> Counts)>> GetOrderCountForLast7Days()
+        {
+            var serviceResponse = new ServiceResponse<(List<string>, List<int>)>();
+
+            // Calculate the date 7 days ago from today
+            var last7Days = DateTime.Now.Date.AddDays(-6); // To include today, we need to subtract 6 instead of 7.
+
+            // Get all orders from the database for the last 7 days
+            var orders = await _context.Orders
+                .Where(o => o.OrderDate >= last7Days)
+                .ToListAsync();
+
+            // Group orders by order date and count the number of orders in each group
+            var ordersPerDay = orders
+                .GroupBy(o => o.OrderDate.Date) // Group by the date part only, ignoring the time
+                .Select(g => new { OrderDate = g.Key, Count = g.Count() })
+                .ToList();
+
+            // Create a list of dates and counts for the last seven days
+            var datesForLast7Days = Enumerable.Range(0, 7)
+                .Select(offset => last7Days.AddDays(offset).ToString("MM-dd-yyyy"))
+                .ToList();
+
+            var countsForLast7Days = datesForLast7Days
+                .GroupJoin(
+                    ordersPerDay,
+                    date => DateTime.ParseExact(date, "MM-dd-yyyy", CultureInfo.InvariantCulture),
+                    order => order.OrderDate.Date,
+                    (date, orderGroup) => orderGroup.Any() ? orderGroup.First().Count : 0
+                )
+                .ToList();
+
+            // Set the dates and counts as the Data property of the ServiceResponse
+            serviceResponse.Data = (datesForLast7Days, countsForLast7Days);
+
+            return serviceResponse;
+        }
+
+
+
 
 
 
 
     }
 }
+
+//public async Task<ServiceResponse<IEnumerable<GetAllOrderDto>>> OrderDetails(string customerIdClaim)
+//{
+//    var serviceResponse = new ServiceResponse<IEnumerable<GetAllOrderDto>>();
+
+//    var orders = await _context.Orders.ToListAsync();
+
+//    var customerId = customerIdClaim;
+
+//    var customer = await _userManager.FindByIdAsync(customerId);
+
+
+
+
+//    if (orders == null)
+//    {
+//        serviceResponse.Success = true;
+//        serviceResponse.Message = "No Orders Found!";
+//        return serviceResponse;
+
+//    }
+
+//    var getOrderDtoList = new List<GetAllOrderDto>();  
+
+//    foreach( var order in orders)
+//    {
+//        var table = _context.Tables.FirstOrDefault(t => t.TableId == order.TableId);
+
+//        // var foodItemIds = order.OrderItems.Select(oi => oi.FoodItemId);
+
+//        var getOrderItemDtos = order.OrderItems.Select(oi => new GetOrderItemDto
+//        {
+//            FoodItemId = oi.FoodItemId,
+//            ItemName = oi.FoodItem.ItemName, // Access the FoodItem name directly from the OrderItem's FoodItem property
+//            Quantity = oi.Quantity,
+//            // Add other properties as needed...
+//        }).ToList();
+//        var getOrderDto = new GetAllOrderDto()
+//        {
+//            OrderId = order.OrderId,
+//            CustomerId = customerId,
+//            CustomerName = customer?.Name,
+//            TableId = order.TableId,
+//            TableNumber = table?.TableNumber,
+//            OrderDate = order.OrderDate,
+//            OrderItems = getOrderItemDtos,
+
+//        };
+//        getOrderDtoList.Add(getOrderDto);   
+
+//    }
+//    serviceResponse.Data = getOrderDtoList;
+//    serviceResponse.Message = "Fetched All Placed Order Details";
+//    return serviceResponse;
+
+
+//}
+
+
+//public async Task<ServiceResponse<(List<DateTime> Dates, List<int> Counts)>> GetOrderCountForLast7Days()
+//{
+//    var serviceResponse = new ServiceResponse<(List<DateTime>, List<int>)>();
+
+//    // Calculate the date 7 days ago from today
+//    var last7Days = DateTime.Now.Date.AddDays(-6); // To include today, we need to subtract 6 instead of 7.
+
+//    // Get all orders from the database for the last 7 days
+//    var orders = await _context.Orders
+//        .Where(o => o.OrderDate >= last7Days)
+//        .ToListAsync();
+
+//    // Group orders by order date and count the number of orders in each group
+//    var ordersPerDay = orders
+//        .GroupBy(o => o.OrderDate.Date) // Group by the date part only, ignoring the time
+//        .Select(g => new { OrderDate = g.Key, Count = g.Count() })
+//        .ToList();
+
+//    // Create a list of dates and counts for the last seven days
+//    var datesForLast7Days = Enumerable.Range(0, 7)
+//        .Select(offset => last7Days.AddDays(offset))
+//        .ToList();
+
+//    var countsForLast7Days = datesForLast7Days
+//        .GroupJoin(
+//            ordersPerDay,
+//            date => date,
+//            order => order.OrderDate.Date,
+//            (date, orderGroup) => orderGroup.Any() ? orderGroup.First().Count : 0
+//        )
+//        .ToList();
+
+//    // Set the dates and counts as the Data property of the ServiceResponse
+//    serviceResponse.Data = (datesForLast7Days, countsForLast7Days);
+
+//    return serviceResponse;
+//}

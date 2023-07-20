@@ -13,5 +13,8 @@ namespace Restaurant_Reservation_Management_System_Api.Services.Admin.TableServi
         Task<ServiceResponse<string>> DeleteTable(int id);
 
         Task<ServiceResponse<GetAllTableDtoAdmin>> UpdateTable(int id, AddTableDtoAdmin addTableDtoAdmin);
+
+        Task<ServiceResponse<int>> GetTotalTableCount();
     }
+
 }

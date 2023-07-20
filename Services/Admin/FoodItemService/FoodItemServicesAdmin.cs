@@ -6,6 +6,7 @@ using Restaurant_Reservation_Management_System_Api.Data;
 using Restaurant_Reservation_Management_System_Api.Dto.Admin.FoodItem;
 using Restaurant_Reservation_Management_System_Api.Dto.Admin.MenuCategory;
 using Restaurant_Reservation_Management_System_Api.Model;
+using System.Collections.Generic;
 
 namespace Restaurant_Reservation_Management_System_Api.Services.Admin.FoodItemService
 {
@@ -200,6 +201,53 @@ namespace Restaurant_Reservation_Management_System_Api.Services.Admin.FoodItemSe
 
 
 
+        }
+        public async Task<ServiceResponse<IEnumerable<GetFoodItemDtoAdmin>>> GetFoodItemByCategory(int id)
+        {
+
+            var serviceResponse = new ServiceResponse<IEnumerable<GetFoodItemDtoAdmin>>();
+            try
+            {
+
+
+
+                var categoryExist = await _context.MenuCategories
+                     .Include(c => c.FoodItems) // Include the FoodItems collection in the query
+                     .FirstOrDefaultAsync(c => c.MenuCategoryId == id);
+
+
+                if (categoryExist == null)
+                {
+                    serviceResponse.Success = false;
+                    serviceResponse.Message = "No Food Item Found For the Category!";
+                    return serviceResponse;
+
+                }
+                var foodItemsDto = categoryExist.FoodItems
+                    .Select(foodItem => new GetFoodItemDtoAdmin
+                    {
+                        FoodItemId = foodItem.FoodItemId,
+                        CategoryId = foodItem.CategoryId,
+                        CategoryName = foodItem.Category.CategoryName,
+                        ItemName = foodItem.ItemName,
+                        Description = foodItem.Description,
+                        Price = foodItem.Price
+                        // Add other properties if needed
+                    });
+
+                serviceResponse.Data = foodItemsDto;
+                serviceResponse.Success = true;
+
+
+
+            }
+            catch(Exception ex)
+            {
+                serviceResponse.Message = "Error in Retrieving Food Item For The given Category"+ex.Message;
+                serviceResponse.Success = false;
+                
+            }
+            return serviceResponse;
         }
 
         public async Task<ServiceResponse<int>> GetFoodItemsCount()

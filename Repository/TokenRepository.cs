@@ -38,6 +38,10 @@ namespace Restaurant_Reservation_Management_System_Api.Repository
 
             claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
+            claims.AddRange(roles.Select(role => new Claim("Roles", role)));
+
+
+
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
 
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

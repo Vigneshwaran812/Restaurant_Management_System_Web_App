@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Restaurant_Reservation_Management_System_Api.Data;
@@ -162,6 +163,37 @@ namespace Restaurant_Reservation_Management_System_Api.Controllers.UserControlle
             return NoContent();
         }
 
+        [HttpGet]
+        [Route("GetOrderCountForLast7Days")]
+        public async Task<IActionResult> GetOrderCountForLast7Days()
+        {
+            var response = await _orderServiceUser.GetOrderCountForLast7Days();
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(new
+            {
+                Dates = response.Data.Dates,
+                Counts = response.Data.Counts
+            });
+            
+            
+        }
+
+        [HttpGet("total-order-count")]
+        public async Task<IActionResult> GetTotalOrderCount()
+        {
+            var response = await _orderServiceUser.GetTotalOrderCount();
+
+            if (!response.Success)
+            {
+                return BadRequest(response);
+            }
+
+            return Ok(response);
+        }
         private bool OrderExists(int id)
         {
             return (_context.Orders?.Any(e => e.OrderId == id)).GetValueOrDefault();

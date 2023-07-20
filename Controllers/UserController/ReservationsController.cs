@@ -30,7 +30,7 @@ namespace Restaurant_Reservation_Management_System_Api.Controllers.UserControlle
         [HttpPost]
         [Route("Tables")]
 
-        public async Task<ActionResult<ServiceResponse<List<GetTableDtoUser>>>> GetAvailableTables(GetReservationDetailsForTableDtoUser getReservationDetailsForTableDtoUser)
+        public async Task<ActionResult<ServiceResponse<List<TableAvailability>>>> GetAvailableTables(GetAvailableTablesDto getReservationDetailsForTableDtoUser)
         {
             var response = await _reservationServices.GetAvailableTables(getReservationDetailsForTableDtoUser);
 
@@ -77,20 +77,20 @@ namespace Restaurant_Reservation_Management_System_Api.Controllers.UserControlle
 
         // POST: api/Reservations
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<GetReservationDtoUser>> PostReservation(CreateReservationDtoUser createReservationDtoUser)
-        {
+        //[HttpPost]
+        //public async Task<ActionResult<GetReservationDtoUser>> PostReservation(CreateReservationDtoUser createReservationDtoUser)
+        //{
 
-            var response = await _reservationServices.PostReservation(createReservationDtoUser);
+        //    var response = await _reservationServices.PostReservation(createReservationDtoUser);
 
-            if(response.Success==false)
-            {
-                return BadRequest(response);
-            }
-            return Ok(response);
+        //    if(response.Success==false)
+        //    {
+        //        return BadRequest(response);
+        //    }
+        //    return Ok(response);
 
 
-        }
+        //}
 
         // DELETE: api/Reservations/5
         [HttpDelete("{id}")]
@@ -105,6 +105,19 @@ namespace Restaurant_Reservation_Management_System_Api.Controllers.UserControlle
             }
             return Ok(response);
                 
+        }
+
+
+        [HttpPost("ReserveTable")]
+        public async Task<ActionResult<ServiceResponse<Reservation>>> ReserveTable(CreateReservationDtoUser createReservationDtoUser)
+        {
+            var response = await _reservationServices.ReserveTable(createReservationDtoUser);
+            //if (!response.Success)
+            //{
+            //    return BadRequest(response);
+            //}
+
+            return Ok(response);
         }
 
         private bool ReservationExists(int id)

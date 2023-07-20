@@ -183,6 +183,20 @@ namespace Restaurant_Reservation_Management_System_Api.Services.Admin.TableServi
 
         }
 
+        public async Task<ServiceResponse<int>> GetTotalTableCount()
+        {
+            var serviceResponse = new ServiceResponse<int>();
+
+            // Get the total count of orders from the database
+            var totalCount = await _context.Tables.CountAsync();
+
+            // Set the total order count in the Data property of the ServiceResponse
+            serviceResponse.Data = totalCount;
+
+            return serviceResponse;
+        }
+
+
 
 
 

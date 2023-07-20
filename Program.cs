@@ -16,6 +16,8 @@ using Restaurant_Reservation_Management_System_Api.Services.Auth;
 using Restaurant_Reservation_Management_System_Api.Repository;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
+using EmailService;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -70,8 +72,19 @@ builder.Services.AddScoped<IReservationServicesUser, ReservationServicesUser>();
 builder.Services.AddScoped<ICustomerServicesUser , CustomerServicesUser>();
 builder.Services.AddScoped<IOrderServicesUser, OrderServicesUser>();
 
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 
 
+// In your Startup.cs or where you configure JSON serialization
+//builder.Services.AddControllers().AddJsonOptions(options =>
+//{
+//    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+//});
+
+var emailConfig = builder.Configuration
+        .GetSection("EmailConfiguration")
+        .Get<EmailConfiguration>();
+builder.Services.AddSingleton(emailConfig);
 
 builder.Services.AddControllers();
 builder.Services.AddCors();

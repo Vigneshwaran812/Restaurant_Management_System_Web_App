@@ -36,7 +36,7 @@ namespace Restaurant_Reservation_Management_System_Api.Controllers.AdminControll
         public async Task<ActionResult<ServiceResponse<IEnumerable<GetFoodItemDtoAdmin>>>> GetFoodItems()
         {
             var response = await _foodItemServicesAdmin.GetFoodItems();
-            if (response.Success == false)
+            if (response.Success == false)  
             {
                 return BadRequest(response);
             }
@@ -62,6 +62,21 @@ namespace Restaurant_Reservation_Management_System_Api.Controllers.AdminControll
             }
 
             return foodItem;
+        }
+
+        [HttpGet]
+        [Route("GetFoodItemByCategory")]
+        public async Task<ActionResult<ServiceResponse<IEnumerable<GetFoodItemDtoAdmin>>>> GetFoodItemByCategory(int id)
+        {
+            var response = await _foodItemServicesAdmin.GetFoodItemByCategory(id);
+
+            if(response.Success == false)
+            {
+                return BadRequest(response);
+
+            }
+            return Ok(response);
+
         }
 
         // PUT: api/FoodItemsControllerAdmin/5

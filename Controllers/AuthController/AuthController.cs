@@ -126,5 +126,18 @@ namespace Restaurant_Reservation_Management_System_Api.Controllers.AuthControlle
 
         }
 
+        //[HttpPost("ForgotPassword")]
+        //[AllowAnonymous]
+
+        //public async Task<ActionResult<ServiceResponse<string>>> ForgotPassword(string email)
+        //{
+        //    var response = await _authService.ForgotPassword(email);
+        //    if (!response.Success)
+        //    {
+        //        return BadRequest(response);
+        //    }
+        //    return Ok(response);
+        //}
+
     }
 }

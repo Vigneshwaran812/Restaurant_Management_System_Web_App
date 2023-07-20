@@ -64,7 +64,7 @@ namespace Restaurant_Reservation_Management_System_Api.Controllers.AdminControll
 
         // GET: api/RegisteredCustomers
         [HttpGet]
-        [Route("/CustomerCount")]
+        [Route("CustomerCount")]
        // [Authorize(Roles = "Admin")]
         public async Task<ActionResult<ServiceResponse<int>>> GetRegisteredCustomersCount()
         {
@@ -84,8 +84,6 @@ namespace Restaurant_Reservation_Management_System_Api.Controllers.AdminControll
             response.Message = "Fetched Total Number of Registered Customers Successfully!";
             return Ok(response);
         }
-
-
 
         private bool RegisteredCustomerExists(string id)
         {

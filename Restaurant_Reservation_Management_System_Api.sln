@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Restaurant_Reservation_Management_System_Api", "Restaurant_Reservation_Management_System_Api.csproj", "{DCDCD796-B897-4E22-8E44-5381AAEA0903}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Restaurant_Reservation_Management_System_Api", "Restaurant_Reservation_Management_System_Api.csproj", "{DCDCD796-B897-4E22-8E44-5381AAEA0903}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailService", "..\EmailService\EmailService.csproj", "{820E6E4E-60CA-4219-98DE-1F013CD7F9D0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{DCDCD796-B897-4E22-8E44-5381AAEA0903}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DCDCD796-B897-4E22-8E44-5381AAEA0903}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DCDCD796-B897-4E22-8E44-5381AAEA0903}.Release|Any CPU.Build.0 = Release|Any CPU
+		{820E6E4E-60CA-4219-98DE-1F013CD7F9D0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{820E6E4E-60CA-4219-98DE-1F013CD7F9D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{820E6E4E-60CA-4219-98DE-1F013CD7F9D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{820E6E4E-60CA-4219-98DE-1F013CD7F9D0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

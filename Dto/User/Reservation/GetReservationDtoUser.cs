@@ -5,7 +5,7 @@ namespace Restaurant_Reservation_Management_System_Api.Dto.User.Reservation
 {
     public class GetReservationDtoUser
     {
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         public string CustomerName { get; set; }    
 

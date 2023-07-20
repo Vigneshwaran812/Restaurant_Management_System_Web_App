@@ -14,5 +14,7 @@ namespace Restaurant_Reservation_Management_System_Api.Services.Admin.FoodItemSe
         Task<ServiceResponse<string>> DeleteFoodItem(int id);
 
         Task<ServiceResponse<int>> GetFoodItemsCount();
+
+        Task<ServiceResponse<IEnumerable<GetFoodItemDtoAdmin>>> GetFoodItemByCategory(int id);
     }
 }
